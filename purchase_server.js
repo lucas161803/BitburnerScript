@@ -1,7 +1,4 @@
-async function deployAndRun(ns, script, hostname, ram, target) {
-    await ns.scp(script, "home", hostname);
-    ns.exec(script, hostname, Math.floor(ram / ns.getScriptRam(script)), target);
-}
+import {deployAndRun} from "./deploy_and_run";
 
 function isMoneyEnough(ns, ram) {
     return ns.getServerMoneyAvailable("home") > ns.getPurchasedServerCost(ram);
@@ -15,7 +12,7 @@ export async function main(ns) {
     let i = 0;
     while (i < ns.getPurchasedServerLimit()) {
         if (isMoneyEnough(ns, ram)) {
-            await deployAndRun(ns, script, ns.purchaseServer(`serv-${i}`, ram), ram, target);
+            await deployAndRun(ns, script, ns.purchaseServer(`serv-${i}`, ram), target);
             i++;
         } else {
             await ns.sleep(200);
